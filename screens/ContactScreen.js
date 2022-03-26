@@ -2,10 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
-    return (
-        <View>
-            <Text>ContactScreen</Text>
-            <StatusBar style="light" />
-        </View>
-    );
+  const numero = 5;
+
+  return (
+    <View>
+      <Text>Contact Screen</Text>
+    </View>
+  );
 }
