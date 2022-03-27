@@ -1,10 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-import Navigation from "./navigation/AuthenticatedNavigation";
+import React from 'react';
+import Navigation from './navigation/AuthenticatedNavigation';
 
 export default function App() {
-  return (
-      <Navigation/>
-  );
+  return <Navigation />;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import MainScreen from '../screens/MainScreen';
+import HomeScreen from '../screens/HomeScreen';
 import ChatScreen from '../screens/ChatScreen';
 import Header from '../component/Header';
 
@@ -11,16 +11,16 @@ const tab = createBottomTabNavigator();
 function MyTabs() {
   return (
     <tab.Navigator
-      initialRouteName={'Main'}
+      initialRouteName={'Home'}
       screenOptions={{
         header: props => <Header {...props} />,
         tabBarActiveTintColor: '#a100f2',
       }}>
       <tab.Screen
-        name={'Main'}
-        component={MainScreen}
+        name={'Home'}
+        component={HomeScreen}
         options={{
-          tabBarLabel: 'Main',
+          tabBarLabel: 'Home',
           headerTitleAlign: 'center',
           tabBarIcon: ({ color, size }) => <Ionicons name="home-sharp" size={size} color={color} />,
         }}
@@ -40,10 +40,10 @@ function MyTabs() {
   );
 }
 
-export default function Navigation() {
-  return (
-    <NavigationContainer>
-      <MyTabs />
-    </NavigationContainer>
-  );
+export default function Navigation(){
+    return(
+        <NavigationContainer>
+            <MyTabs/>
+        </NavigationContainer>
+    )
 }
