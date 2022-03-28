@@ -40,10 +40,10 @@ function MyTabs() {
   );
 }
 
-export default function Navigation(){
-    return(
-        <NavigationContainer>
-            <MyTabs/>
-        </NavigationContainer>
-    )
+export default function Navigation() {
+  return (
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
+  );
 }

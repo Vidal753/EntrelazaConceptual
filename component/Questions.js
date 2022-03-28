@@ -1,22 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, Button } from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import alert from 'react-native-web/dist/exports/Alert';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { useDispatch } from 'react-redux';
 import RadioButton from './RadioButton';
 import TextInput from './TextInput';
 import { colors } from '../Constant/Colors';
+import { ADD_CHOICE } from '../reducer/choice';
+import Button from '../component/Button';
 
-export const RADIO_QUESTION = 'radio_question';
-export const CHECK_QUESTION = 'check_question';
-export const TEXT_QUESTION = 'text_question';
+export const RADIO_QUESTION = 'radio-question';
+export const TEXT_QUESTION = 'text-question';
 export const IMAGE_QUESTION = 'image_question';
-export const SIMPLE_RADIO_QUESTION = 'simple_radio_question';
-export const RADIO_TEXT_QUESTION = 'radio_text_question';
-export const MULTI_CHECK_QUESTION = 'multi_check_question';
-export const AMOUNT_QUESTION = 'amount_question';
+export const RADIO_TEXT_QUESTION = 'radio-text-question';
 
 const makeStyles = function(color) {
   return StyleSheet.create({
@@ -28,14 +22,26 @@ const makeStyles = function(color) {
       borderColor: color.surface,
       borderWidth: 3,
     },
+    text: {
+      justifyContent: 'flex-start',
+      flexDirection: 'column',
+    },
   });
 };
 
-export default function({ question, selected, index, onPress }) {
+const QuestionScreen = ({ question }) => {
+  const [choice, setChoice] = useState('');
+  const dispatch = useDispatch();
   const [select, setSelect] = useState(0);
-  const [answer, setAnswer] = useState();
   const color = { ...colors };
   const style = makeStyles(color);
+
+  const add_card = () => {
+    dispatch({
+      type: ADD_CHOICE,
+      payload: { choice },
+    });
+  };
 
   const renderRadioQuestion = () => {
     return (
@@ -45,21 +51,14 @@ export default function({ question, selected, index, onPress }) {
           selected={select}
           options={['Si', 'A veces', 'Aun no']}
           onChangeSelect={(opt, index) => {
-            setAnswer(opt);
+            setChoice(opt);
             setSelect(index);
           }}
           vertical
         />
-
-        {/*<Button title={'Hola'} onPress={() => Alert.alert(answer)} />*/}
-      </View>
-    );
-  };
-
-  const renderCheckQuestion = () => {
-    return (
-      <View>
-        <Text>CheckQuestion</Text>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Button title={'Enviar'} onPress={add_card} />
+        </View>
       </View>
     );
   };
@@ -68,23 +67,36 @@ export default function({ question, selected, index, onPress }) {
     return (
       <View style={style.containerRadioQuestion}>
         <Text style={{ textAlign: 'center' }}>{question.quest}</Text>
-        <TextInput placeholder={'Escribir'} multiline containerStyle={{ height: 150 }} />
+        <TextInput
+          placeholder={'Escribir'}
+          multiline
+          containerStyle={{ height: 150 }}
+          onChangeText={text => setChoice(text)}
+        />
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Button title={'Enviar'} onPress={add_card} />
+        </View>
       </View>
     );
   };
 
   const renderImageQuestion = () => {
     return (
-      <View>
-        <Text>ImageQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderSimpleRadioQuestion = () => {
-    return (
-      <View>
-        <Text>SimpleRadioQuestion</Text>
+      <View style={style.containerRadioQuestion}>
+        <Text style={{ textAlign: 'center' }}>{question.quest}</Text>
+        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+          <Image source={require('../assets/icon.png')} style={{ width: '40%', height: '100%' }} />
+          <RadioButton
+            selected={select}
+            options={['Si', 'Aun no']}
+            onChangeSelect={(opt, index) => {
+              setChoice(opt);
+              setSelect(index);
+            }}
+            vertical
+            verticalPosition
+          />
+        </View>
       </View>
     );
   };
@@ -92,23 +104,25 @@ export default function({ question, selected, index, onPress }) {
   const renderRadioTextQuestion = () => {
     return (
       <View>
-        <Text>RadioTextQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderRadioTextAmountQuestion = () => {
-    return (
-      <View>
-        <Text>RadioTextAmountQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderMultiCheckQuestion = () => {
-    return (
-      <View>
-        <Text>MultiCheckQuestion</Text>
+        <View style={style.containerRadioQuestion}>
+          <Text style={{ textAlign: 'left' }}>
+            {question.num}.{question.quest}
+          </Text>
+          <RadioButton
+            containerStyle={style.text}
+            selected={select}
+            options={['Si', 'No']}
+            onChangeSelect={(opt, index) => {
+              setChoice(opt);
+              setSelect(index);
+            }}
+            vertical
+          />
+          <TextInput
+            placeholder={'Si contesta "No", explique...'}
+            containerStyle={{ borderRadius: 25 }}
+          />
+        </View>
       </View>
     );
   };
@@ -117,25 +131,21 @@ export default function({ question, selected, index, onPress }) {
     case RADIO_QUESTION:
       return renderRadioQuestion();
 
-    case CHECK_QUESTION:
-      return renderCheckQuestion();
-
     case TEXT_QUESTION:
       return renderTextQuestion();
 
     case IMAGE_QUESTION:
       return renderImageQuestion();
 
-    case SIMPLE_RADIO_QUESTION:
-      return renderSimpleRadioQuestion();
-
     case RADIO_TEXT_QUESTION:
       return renderRadioTextQuestion();
 
-    case MULTI_CHECK_QUESTION:
-      return renderMultiCheckQuestion();
-
-    case AMOUNT_QUESTION:
-      return renderRadioTextAmountQuestion();
+    case 'FINAL':
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Button title={'Enviar'} onPress={add_card} />
+        </View>
+      );
   }
-}
+};
+export default QuestionScreen;
