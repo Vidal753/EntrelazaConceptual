@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ export default function() {
       <Text>ChatScreen</Text>
       {/* eslint-disable-next-line react/style-prop-object */}
       <StatusBar style="light" />
-      <FlatList data={choices} renderItem={({ item, index }) => <Text>{item.choice}</Text>} />
+      <FlatList data={choices} renderItem={({ item }) => <Text>{item.choice}</Text>} />
     </View>
   );
 }
