@@ -3,9 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import { View, FlatList } from 'react-native';
 import Questions, {
   RADIO_QUESTION,
-  CHECK_QUESTION,
   IMAGE_QUESTION,
   TEXT_QUESTION,
+  RADIO_TEXT_QUESTION,
 } from '../component/Questions';
 
 export default function() {
@@ -22,6 +22,18 @@ export default function() {
         ' alcanzarlo' +
         '(por ejemplo, para agarrar un jueguete en el mostrador de la cocina o para ayudarle ne la cocina)?',
     },
+    {
+      typeQuestion: RADIO_TEXT_QUESTION,
+      num: 1,
+      quest: 'Crees ud. que su nino/a habla de igual forma que los ninos de su edad?',
+    },
+    {
+      typeQuestion: IMAGE_QUESTION,
+      quest:
+        ' alcanzarlo' +
+        '(por ejemplo, para agarrar un jueguete en el mostrador de la cocina o para ayudarle ne la cocina)?',
+    },
+    { typeQuestion: 'FINAL' },
   ];
 
   return (

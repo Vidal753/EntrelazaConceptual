@@ -1,141 +1,81 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, Button } from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import alert from 'react-native-web/dist/exports/Alert';
-import RadioButton from './RadioButton';
-import TextInput from './TextInput';
-import { colors } from '../Constant/Colors';
+import { View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ADD_CHOICE } from '../reducer/choice';
+import Button from '../component/Button';
+import RadioQuestion from './RadioQuestion';
+import TextQuestion from './TextQuestion';
+import ImageQuestion from './ImageQuestion';
+import RadioTextQuestion from './RadioTextQuestion';
 
-export const RADIO_QUESTION = 'radio_question';
-export const CHECK_QUESTION = 'check_question';
-export const TEXT_QUESTION = 'text_question';
+export const RADIO_QUESTION = 'radio-question';
+export const TEXT_QUESTION = 'text-question';
 export const IMAGE_QUESTION = 'image_question';
-export const SIMPLE_RADIO_QUESTION = 'simple_radio_question';
-export const RADIO_TEXT_QUESTION = 'radio_text_question';
-export const MULTI_CHECK_QUESTION = 'multi_check_question';
-export const AMOUNT_QUESTION = 'amount_question';
+export const RADIO_TEXT_QUESTION = 'radio-text-question';
 
-const makeStyles = function(color) {
-  return StyleSheet.create({
-    containerRadioQuestion: {
-      margin: 14,
-      paddingVertical: 35,
-      paddingHorizontal: 15,
-      borderRadius: 15,
-      borderColor: color.surface,
-      borderWidth: 3,
-    },
-  });
-};
-
-export default function({ question, selected, index, onPress }) {
+const QuestionScreen = ({ question }) => {
+  const [choice, setChoice] = useState('');
+  const dispatch = useDispatch();
   const [select, setSelect] = useState(0);
-  const [answer, setAnswer] = useState();
-  const color = { ...colors };
-  const style = makeStyles(color);
 
-  const renderRadioQuestion = () => {
-    return (
-      <View style={style.containerRadioQuestion}>
-        <Text style={{ textAlign: 'center' }}>{question.quest}</Text>
-        <RadioButton
-          selected={select}
-          options={['Si', 'A veces', 'Aun no']}
-          onChangeSelect={(opt, index) => {
-            setAnswer(opt);
-            setSelect(index);
-          }}
-          vertical
-        />
-
-        {/*<Button title={'Hola'} onPress={() => Alert.alert(answer)} />*/}
-      </View>
-    );
-  };
-
-  const renderCheckQuestion = () => {
-    return (
-      <View>
-        <Text>CheckQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderTextQuestion = () => {
-    return (
-      <View style={style.containerRadioQuestion}>
-        <Text style={{ textAlign: 'center' }}>{question.quest}</Text>
-        <TextInput placeholder={'Escribir'} multiline containerStyle={{ height: 150 }} />
-      </View>
-    );
-  };
-
-  const renderImageQuestion = () => {
-    return (
-      <View>
-        <Text>ImageQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderSimpleRadioQuestion = () => {
-    return (
-      <View>
-        <Text>SimpleRadioQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderRadioTextQuestion = () => {
-    return (
-      <View>
-        <Text>RadioTextQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderRadioTextAmountQuestion = () => {
-    return (
-      <View>
-        <Text>RadioTextAmountQuestion</Text>
-      </View>
-    );
-  };
-
-  const renderMultiCheckQuestion = () => {
-    return (
-      <View>
-        <Text>MultiCheckQuestion</Text>
-      </View>
-    );
+  const add_card = () => {
+    dispatch({
+      type: ADD_CHOICE,
+      payload: { choice },
+    });
   };
 
   switch (question.typeQuestion) {
     case RADIO_QUESTION:
-      return renderRadioQuestion();
-
-    case CHECK_QUESTION:
-      return renderCheckQuestion();
+      return (
+        <View>
+          <RadioQuestion
+            question={question}
+            selected={select}
+            options={['Si', 'A veces', 'Aun no']}
+            onChangeSelect={(opt, index) => {
+              setChoice(opt);
+              setSelect(index);
+            }}
+          />
+        </View>
+      );
 
     case TEXT_QUESTION:
-      return renderTextQuestion();
+      return <TextQuestion question={question} onChangeText={text => setChoice(text)} />;
 
     case IMAGE_QUESTION:
-      return renderImageQuestion();
-
-    case SIMPLE_RADIO_QUESTION:
-      return renderSimpleRadioQuestion();
+      return (
+        <ImageQuestion
+          question={question}
+          selected={select}
+          options={['Si', 'Aun no']}
+          onChangeSelect={(opt, index) => {
+            setChoice(opt);
+            setSelect(index);
+          }}
+        />
+      );
 
     case RADIO_TEXT_QUESTION:
-      return renderRadioTextQuestion();
+      return (
+        <RadioTextQuestion
+          question={question}
+          selected={select}
+          options={['Si', 'No']}
+          onChangeSelect={(opt, index) => {
+            setChoice(opt);
+            setSelect(index);
+          }}
+        />
+      );
 
-    case MULTI_CHECK_QUESTION:
-      return renderMultiCheckQuestion();
-
-    case AMOUNT_QUESTION:
-      return renderRadioTextAmountQuestion();
+    case 'FINAL':
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Button title={'Enviar'} onPress={add_card} />
+        </View>
+      );
   }
-}
+};
+export default QuestionScreen;
